@@ -139,10 +139,10 @@ function get_intercept_history() {
     socket.emit("get_intercept_history")
 }
 
-function changePackage(packagename) {
-    var pkg = {packagename: packagename}
+function changePackage() {
+//    var pkg = {packagename: packagename}
     $("#env_result").html("Waiting for device & package...")
-    socket.emit("setPackage", pkg)
+    socket.emit("setPackage", {packagename: $("input[name='pkgname']").val()})
 }
 
 
@@ -377,33 +377,33 @@ window.onload = function () {
         })
     }
 
-    function getPackages() {
-        $.get('http://' + location.host + '/package', (package) => {
-            tmp = package
-            if (package != null && package != "None" && package != "") {
-                package_html = `<div class="bg-success">
-                                    <p class="text-info"><i class="glyphicon glyphicon-book"></i> Package: <code> ` + package + `</code></p>
-                                    <div class="input-group col-sm-3">
-                                        <input id="packagename1" class="form-control" placeholder="packagename">
-                                        <br />
-                        <button class="btn btn-success" type="button" onclick='changePackage($("#packagename1").val())'>Confirm</button>
-                                    </div> 
-                                </div>`
-            } else {
-                package_html = `<div class="bg-danger">
-                                    <p class="text-warning"><i class="glyphicon glyphicon-book"></i> Can I have ur package please?</p>
-                                    <div class="input-group col-sm-3">
-                                        <input id="packagename1" class="form-control" placeholder="packagename">
-                                        <br />
-                        <button class="btn btn-success" type="button" onclick='changePackage($("#packagename1").val())'>Confirm</button>
-                                    </div>                            
-                                </div>`
-            }
-            $("#pkg_info").html(package_html)
-            console.log(("[+]new package: " + package.data))
-            // console.log(data)
-        })
-    }
+//    function getPackages() {
+//        $.get('http://' + location.host + '/package', (package) => {
+//            tmp = package
+//            if (package != null && package != "None" && package != "") {
+//                package_html = `<div class="bg-success">
+//                                    <p class="text-info"><i class="glyphicon glyphicon-book"></i> Package: <code> ` + package + `</code></p>
+//                                    <div class="input-group col-sm-3">
+//                                        <input id="packagename1" class="form-control" placeholder="packagename">
+//                                        <br />
+//                        <button class="btn btn-success" type="button" onclick='changePackage($("#packagename1").val())'>Confirm</button>
+//                                    </div>
+//                                </div>`
+//            } else {
+//                package_html = `<div class="bg-danger">
+//                                    <p class="text-warning"><i class="glyphicon glyphicon-book"></i> Can I have ur package please?</p>
+//                                    <div class="input-group col-sm-3">
+//                                        <input id="packagename1" class="form-control" placeholder="packagename">
+//                                        <br />
+//                        <button class="btn btn-success" type="button" onclick='changePackage($("#packagename1").val())'>Confirm</button>
+//                                    </div>
+//                                </div>`
+//            }
+//            $("#pkg_info").html(package_html)
+//            console.log(("[+]new package: " + package.data))
+//            // console.log(data)
+//        })
+//    }
 
     function getHookScript() {
         $.get('http://' + location.host + '/hook_script', (data) => {
@@ -589,7 +589,7 @@ window.onload = function () {
         socket.emit('authentication', {uuid: get_uuid()});
         var current_intercept_time = null
         refresh_device()
-        getPackages()
+//        getPackages()
         overwrite()
 
         $.get('http://' + location.host + '/AutoRefresh', (data) => {
@@ -648,7 +648,7 @@ window.onload = function () {
                     </div>`
                 $("#device_info_tab").html(select_device_html)
                 // $("input[name='device_id']:checked").val();
-                $("input[name='device_id'][value=" + id + "]").attr('checked', 'checked');
+//                $("input[name='device_id'][value=" + id + "]").attr('checked', 'checked');
                 // console.log(select_device_html)
             }
 
@@ -668,11 +668,22 @@ window.onload = function () {
             $("#device_info_tab").html(device_html)
             console.log(("[+]new Device: " + msg.data))
 
+
+
         })
 
         socket.on('update_package', function (msg) {
-            getPackages()
-            doEnv()
+//            getPackages()
+            data = msg.data;
+            package_html = '<div class="bg-success"><form>'
+            jQuery.each(data, function (id, val) {
+                    package_html += `<div class="radio">
+      <label><input type="radio" name="pkgname" value="` + val.pkgname + `">` + `<p class="text-info"><i class="glyphicon glyphicon-phone"></i>` + val.name + " </p></label></div>"
+                });
+                package_html += `<button class="btn btn-success" type="button" id="select_package_button" onclick="changePackage()"'>Select</button>
+                    </div>`
+                $("#pkg_info").html(package_html)
+//            doEnv()
 
         })
 
@@ -864,9 +875,9 @@ window.onload = function () {
             location.reload();
         })
 
-        $("#changePackage").click(() => {
-            changePackage($("#changePkgInput").val())
-        })
+//        $("#changePackage").click(() => {
+//            changePackage($("#changePkgInput").val())
+//        })
 
         $("#clear").click(() => {
             editor2.setValue('')

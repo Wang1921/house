@@ -107,9 +107,9 @@ def getEnumScript():
     build_enum_script(option, house_global.enum_class, house_global.enum_class_pattern)
     return house_global.enum_script_to_load
 
-@app.route('/package', methods=['GET'])
-def getpkg():
-    return house_global.packagename
+# @app.route('/package', methods=['GET'])
+# def getpkg():
+#     return house_global.packagename
 
 @app.route('/hook_clear', methods=['GET'])
 def hook_clear():

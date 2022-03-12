@@ -110,7 +110,10 @@ def set_device(msg):
     unload_script()
     device_id = msg.get('id')
     setDevice(device_id)
-    # emit('update_device', {'data': cgi.escape(str(house_global.device))})
+    packages = []
+    for package in house_global.device.enumerate_applications():
+        packages.append({'pkgname': package.identifier, 'name': package.name, 'pid': package.pid})
+    emit('update_package', {'data': packages})
 
 @socketio.on('setPackage', namespace='/eventBus')
 @authenticated_only
@@ -118,7 +121,7 @@ def setpkg(msg):
     house_global.package_name = msg.get('packagename')
     setPackage(house_global.package_name)
 
-    emit('update_package', {'data': cgi.escape(str(house_global.package_name))})
+    # emit('update_package', {'data': cgi.escape(str(house_global.package_name))})
 
 @socketio.on("setEnumConfig", namespace='/eventBus')
 @authenticated_only

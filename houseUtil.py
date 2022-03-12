@@ -650,7 +650,7 @@ def build_hook_mini_script():
 
 
 def build_env_script():
-    # print(stylize("[+]Building env script for " + house_global.packagename + " .. ", Info))
+    print(stylize("[+]Building env script for " + house_global.packagename + " .. ", Info))
     result = ''
     if house_global.packagename != None:
         result = render('./scripts/enum/env.js', {'packageName': house_global.packagename})
