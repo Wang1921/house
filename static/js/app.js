@@ -142,7 +142,9 @@ function get_intercept_history() {
 function changePackage() {
 //    var pkg = {packagename: packagename}
     $("#env_result").html("Waiting for device & package...")
-    socket.emit("setPackage", {packagename: $("input[name='pkgname']").val()})
+    pid = $("input[name='pid']:checked").val()
+    console.log(pid)
+    socket.emit("setPackage", {pid: pid,packagename:$("#" + pid).text()})
 }
 
 
@@ -673,18 +675,11 @@ window.onload = function () {
         })
 
         socket.on('update_package', function (msg) {
-//            getPackages()
             data = msg.data;
-            package_html = '<div class="bg-success"><form>'
+            $("#pkg_list").empty()
             jQuery.each(data, function (id, val) {
-                    package_html += `<div class="radio">
-      <label><input type="radio" name="pkgname" value="` + val.pkgname + `">` + `<p class="text-info"><i class="glyphicon glyphicon-phone"></i>` + val.name + " </p></label></div>"
-                });
-                package_html += `<button class="btn btn-success" type="button" id="select_package_button" onclick="changePackage()"'>Select</button>
-                    </div>`
-                $("#pkg_info").html(package_html)
-//            doEnv()
-
+                $("#pkg_list").append("<tr><th><div class=radio><label><input type=radio name=pid value=" + val.pid + "></th><th>"+val.name+"</th><th id='" + val.pid + "'>"+val.pkgname+"</th><th>"+val.pid+"</th></tr>")
+            });
         })
 
         socket.on('update_env_info', function (msg) {

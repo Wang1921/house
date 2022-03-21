@@ -830,8 +830,10 @@ def load_script():
         try:
             pending = False
             try:
-                pid = house_global.device.get_process(house_global.packagename).pid
-                house_global.session = house_global.device.attach(house_global.packagename)
+                # pid = house_global.device.get_process(house_global.packagename).pid
+                print("pid:" + house_global.packagename)
+                house_global.session = house_global.device.attach(int(house_global.pid))
+                pid = house_global.pid
             except ProcessNotFoundError as e:
                 if (house_global.gating_option):
                     house_global.device.enable_spawn_gating()

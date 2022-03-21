@@ -118,8 +118,11 @@ def set_device(msg):
 @socketio.on('setPackage', namespace='/eventBus')
 @authenticated_only
 def setpkg(msg):
-    house_global.package_name = msg.get('packagename')
-    setPackage(house_global.package_name)
+    house_global.packagename = msg.get('packagename')
+    house_global.pid = msg.get('pid')
+    print("pid:"+house_global.pid+"\r\npackagename:"+house_global.packagename)
+    setPackage(house_global.packagename)
+    doEnv()
 
     # emit('update_package', {'data': cgi.escape(str(house_global.package_name))})
 
